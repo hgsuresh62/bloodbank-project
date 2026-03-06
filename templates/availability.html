@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 style="margin-bottom:25px;">Blood Availability Status</h2>
+
+<div style="display:flex; flex-wrap:wrap; gap:25px;">
+
+{% for blood in availability %}
+
+    <div class="card" style="flex:1; min-width:200px; text-align:center;">
+
+        <h3 style="margin-bottom:15px;">{{ blood[0] }}</h3>
+
+        {% if blood[1] > 0 %}
+            <h2 style="color:#d90429;">Available</h2>
+            <p>{{ blood[1] }} Units</p>
+        {% else %}
+            <h2 style="color:gray;">Not Available</h2>
+        {% endif %}
+
+    </div>
+
+{% endfor %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,85 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fff0f0;
+    color: #330000;
+    padding: 20px;
+}
+
+h2, h3 {
+    color: #b30000;
+    text-align: center;
+}
+
+form {
+    max-width: 500px;
+    margin: 0 auto;
+    background-color: #ffe6e6;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px #cc9999;
+}
+
+form input[type="text"],
+form input[type="number"],
+form input[type="email"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #b30000;
+    border-radius: 5px;
+}
+
+form input[type="submit"] {
+    background-color: #b30000;
+    color: white;
+    padding: 10px;
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form input[type="submit"]:hover {
+    background-color: #800000;
+}
+
+table {
+    width: 90%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+table, th, td {
+    border: 1px solid #b30000;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background-color: #ff8080;
+    color: #330000;
+}
+
+tr:nth-child(even) {
+    background-color: #ffe6e6;
+}
+
+tr:hover {
+    background-color: #ffd6d6;
+}
+
+a {
+    color: #b30000;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    color: #800000;
+    text-decoration: underline;
+}

@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+
+body{
+    background:#f5f7fa;
+}
+
+/* Container */
+.login-container{
+    display:flex;
+    min-height:90vh;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 20px 40px rgba(0,0,0,0.2);
+    margin:40px;
+}
+
+/* LEFT */
+.login-left{
+    flex:1;
+    background:linear-gradient(rgba(10,10,40,0.7),rgba(10,10,40,0.7)),
+    url("{{ url_for('static', filename='blood-bg.jpg') }}");
+
+    background-size:cover;
+    background-position:center;
+
+    color:white;
+    padding:60px;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+/* RIGHT */
+.login-right{
+    flex:1;
+    background:rgba(255,255,255,0.95);
+    backdrop-filter:blur(10px);
+
+    padding:60px;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+/* Input */
+.input-group{
+    position:relative;
+    margin-bottom:20px;
+}
+
+.input-group input,
+.input-group select{
+    width:100%;
+    padding:12px 15px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    font-size:15px;
+}
+
+/* Button */
+.login-btn{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:linear-gradient(90deg,#d90429,#9d0208);
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.login-btn:hover{
+    opacity:0.9;
+}
+
+/* Error */
+.error-box{
+    background:linear-gradient(90deg,#ff4d4d,#b30000);
+    color:white;
+    padding:12px;
+    border-radius:10px;
+    margin-bottom:20px;
+    text-align:center;
+}
+
+.register-link{
+    margin-top:15px;
+    text-align:center;
+}
+
+.register-link a{
+    color:#d90429;
+    font-weight:bold;
+    text-decoration:none;
+}
+
+</style>
+
+<div class="login-container">
+
+<div class="login-left">
+    <h1>Welcome Back</h1>
+    <p>
+        "The measure of life is not its duration,
+        but its donation."
+    </p>
+</div>
+
+<div class="login-right">
+
+<h2>Login</h2>
+
+{% if error %}
+<div class="error-box">
+    ❌ {{ error }}
+</div>
+{% endif %}
+
+<form method="POST" action="{{ url_for('login') }}">
+
+<!-- ROLE -->
+<div class="input-group">
+<select name="role" required>
+<option value="">Select Role</option>
+<option value="user">User</option>
+<option value="admin">Admin</option>
+</select>
+</div>
+
+<div class="input-group">
+<input type="text" name="username" placeholder="Username" required>
+</div>
+
+<div class="input-group">
+<input type="password" name="password" placeholder="Password" required>
+</div>
+
+<button class="login-btn" type="submit">
+Sign In
+</button>
+
+</form>
+
+<div class="register-link">
+<p>
+Don't have an account?
+<a href="{{ url_for('register') }}">Register here</a>
+</p>
+</div>
+
+</div>
+</div>
+
+{% endblock %}

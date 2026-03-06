@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+
+/* HERO SECTION */
+.hero-section{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:80px 60px;
+    min-height:90vh;
+    background:#fff5f7;
+    border-radius:20px;
+}
+
+/* TEXT SIDE */
+.hero-text{
+    flex:1;
+}
+
+.hero-text h1{
+    font-size:60px;
+    font-weight:800;
+    line-height:1.1;
+}
+
+.hero-text span{
+    color:#e63946;
+}
+
+.hero-text p{
+    margin:25px 0;
+    font-size:18px;
+    color:#555;
+    max-width:500px;
+}
+
+/* BUTTONS */
+.hero-buttons{
+    display:flex;
+    gap:15px;
+}
+
+.btn-primary{
+    background:linear-gradient(90deg,#e63946,#b5179e);
+    color:white;
+    padding:14px 28px;
+    border-radius:12px;
+    text-decoration:none;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+.btn-primary:hover{
+    transform:scale(1.05);
+}
+
+.btn-outline{
+    border:2px solid #e63946;
+    padding:12px 26px;
+    border-radius:12px;
+    text-decoration:none;
+    color:#e63946;
+    font-weight:bold;
+}
+
+/* IMAGE SIDE */
+.hero-image{
+    flex:1;
+    text-align:center;
+    position:relative;
+}
+
+.hero-image img{
+    width:85%;
+    border-radius:20px;
+    box-shadow:0 20px 40px rgba(0,0,0,0.2);
+}
+
+/* FLOAT CARD */
+.stats-card{
+    position:absolute;
+    bottom:20px;
+    left:40px;
+    background:white;
+    padding:20px 25px;
+    border-radius:15px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.1);
+}
+
+.stats-card h2{
+    color:#e63946;
+    margin:0;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+    .hero-section{
+        flex-direction:column;
+        text-align:center;
+    }
+
+    .stats-card{
+        position:static;
+        margin-top:20px;
+    }
+
+    .hero-buttons{
+        justify-content:center;
+    }
+}
+
+</style>
+
+<div class="hero-section">
+
+    <!-- LEFT TEXT -->
+    <div class="hero-text">
+
+        <h1>
+            Donate Blood,<br>
+            <span>Save a Life.</span>
+        </h1>
+
+        <p>
+            Your contribution can make a difference.
+            Join our community of donors and hospital partners
+            to help those in critical need.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a href="{{ url_for('add_donor') }}" class="btn-primary">
+                Donate Now ❤️
+            </a>
+
+            <a href="{{ url_for('findblood') }}" class="btn-outline">
+                Find Blood
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- RIGHT IMAGE -->
+    <div class="hero-image">
+
+        <img src="{{ url_for('static', filename='hero.jpg') }}">
+
+        <div class="stats-card">
+            <h2>12,500+</h2>
+            <p>Registered Donors</p>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card" style="max-width:600px; margin:auto;">
+
+<h2 style="margin-bottom:20px;">Request Blood</h2>
+
+<form method="POST" action="{{ url_for('request_blood') }}">
+
+<label>Patient Name</label>
+<input type="text" name="patient_name" required>
+
+<label>Blood Group</label>
+<select name="blood_group" required>
+    <option value="">Select Blood Group</option>
+    <option>A+</option>
+    <option>A-</option>
+    <option>B+</option>
+    <option>B-</option>
+    <option>O+</option>
+    <option>O-</option>
+    <option>AB+</option>
+    <option>AB-</option>
+</select>
+
+<label>Hospital Name</label>
+<input type="text" name="hospital_name" required>
+
+<label>Contact Number</label>
+<input type="text" name="contact" required>
+
+<!-- ✅ ADD THIS EMAIL FIELD -->
+<label>Your Email</label>
+<input type="email" name="email" required>
+
+<button class="btn btn-primary" type="submit" style="width:100%;">
+    Send Request
+</button>
+
+</form>
+
+</div>
+
+{% endblock %}

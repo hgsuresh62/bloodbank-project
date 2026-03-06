@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 style="margin-bottom:25px;">Search Blood Donors</h2>
+
+<div style="
+max-width:700px;
+background:white;
+padding:30px;
+border-radius:15px;
+box-shadow:0 5px 20px rgba(0,0,0,0.1);
+margin-bottom:40px;
+">
+
+<form method="POST" action="{{ url_for('findblood') }}">
+
+<label>District</label>
+<input type="text" name="district"
+placeholder="Enter district"
+style="width:100%; padding:10px; margin:10px 0 20px 0;
+border-radius:8px; border:1px solid #ccc;">
+
+<label>Blood Group</label>
+
+<select name="blood_group"
+style="width:100%; padding:10px; margin:10px 0 20px 0;
+border-radius:8px; border:1px solid #ccc;">
+
+<option value="">Select Blood Group</option>
+<option value="A+">A+</option>
+<option value="A-">A-</option>
+<option value="B+">B+</option>
+<option value="B-">B-</option>
+<option value="O+">O+</option>
+<option value="O-">O-</option>
+<option value="AB+">AB+</option>
+<option value="AB-">AB-</option>
+
+</select>
+
+<button type="submit"
+style="width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+background:linear-gradient(90deg,#e63946,#b5179e);
+color:white;
+font-weight:bold;
+cursor:pointer;">
+Search
+</button>
+
+</form>
+
+</div>
+
+<!-- RESULTS -->
+
+{% if donors %}
+
+<div style="
+background:white;
+padding:20px;
+border-radius:15px;
+box-shadow:0 5px 20px rgba(0,0,0,0.1);
+overflow-x:auto;
+">
+
+<table style="width:100%; border-collapse:collapse;">
+
+<tr style="background:#ffe5ec;">
+<th style="padding:12px;">ID</th>
+<th style="padding:12px;">Name</th>
+<th style="padding:12px;">Age</th>
+<th style="padding:12px;">Blood Group</th>
+<th style="padding:12px;">District</th>
+<th style="padding:12px;">Phone</th>
+<th style="padding:12px;">Email</th>
+</tr>
+
+{% for donor in donors %}
+<tr style="text-align:center; border-top:1px solid #eee;">
+<td style="padding:10px;">{{ donor[0] }}</td>
+<td style="padding:10px;">{{ donor[1] }}</td>
+<td style="padding:10px;">{{ donor[2] }}</td>
+<td style="padding:10px;">{{ donor[4] }}</td>
+<td style="padding:10px;">{{ donor[5] }}</td>
+<td style="padding:10px;">{{ donor[6] }}</td>
+<td style="padding:10px;">{{ donor[7] }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

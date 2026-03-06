@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Edit Blood Request</h2>
+
+<div class="card">
+
+<form method="POST">
+
+<label>Patient Name</label>
+<input type="text" name="patient_name" value="{{ request[1] }}" required>
+
+<label>Blood Group</label>
+<input type="text" name="blood_group" value="{{ request[2] }}" required>
+
+<label>Hospital</label>
+<input type="text" name="hospital_name" value="{{ request[3] }}" required>
+
+<label>Contact</label>
+<input type="text" name="contact" value="{{ request[4] }}" required>
+
+<label>Email</label>
+<input type="email" name="email" value="{{ request[5] }}" required>
+
+<button class="btn btn-primary" type="submit">
+Update Request
+</button>
+
+</form>
+
+</div>
+
+{% endblock %}

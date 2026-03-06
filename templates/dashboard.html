@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.card-custom {
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.chart-container {
+    width: 100%;
+    height: 300px;
+}
+.small-pie {
+    max-width: 250px;
+    margin: auto;
+}
+.status-good { color: green; font-weight: bold; }
+.status-medium { color: orange; font-weight: bold; }
+.status-low { color: red; font-weight: bold; }
+</style>
+
+<h2 class="mb-4 text-center">📊 Advanced Blood Bank Dashboard</h2>
+
+<div class="row text-center">
+
+    <div class="col-md-4">
+        <div class="card card-custom bg-danger text-white p-3">
+            <h3>{{ total_donors }}</h3>
+            <p>Total Donors</p>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card card-custom bg-primary text-white p-3">
+            <h3>{{ total_requests }}</h3>
+            <p>Total Requests</p>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card card-custom bg-success text-white p-3">
+            <h3>{{ total_hospitals }}</h3>
+            <p>Total Hospitals</p>
+        </div>
+    </div>
+
+</div>
+
+<hr>
+
+<div class="row mt-4">
+
+    <div class="col-md-7">
+        <div class="card card-custom p-3">
+            <h5 class="text-center">Blood Group Distribution (Bar)</h5>
+            <div class="chart-container">
+                <canvas id="barChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <div class="card card-custom p-3 text-center">
+            <h5>Blood Group Share (Compact Pie)</h5>
+            <div class="small-pie">
+                <canvas id="pieChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<hr>
+
+<h4 class="mt-4">🩸 Blood Availability Status</h4>
+
+<ul>
+{% for i in range(blood_labels|length) %}
+    <li>
+        {{ blood_labels[i] }} :
+        {% if blood_values[i] > 5 %}
+            <span class="status-good">Available</span>
+        {% elif blood_values[i] > 2 %}
+            <span class="status-medium">Limited</span>
+        {% else %}
+            <span class="status-low">Critical</span>
+        {% endif %}
+    </li>
+{% endfor %}
+</ul>
+
+<hr>
+
+<h4 class="mt-4">📄 Recent Blood Requests</h4>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Patient</th>
+            <th>Blood</th>
+            <th>Hospital</th>
+            <th>Contact</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for req in recent_requests %}
+        <tr>
+            <td>{{ req[0] }}</td>
+            <td>{{ req[1] }}</td>
+            <td>{{ req[2] }}</td>
+            <td>{{ req[3] }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const bloodLabels = {{ blood_labels | tojson }};
+const bloodValues = {{ blood_values | tojson }};
+
+new Chart(document.getElementById("barChart"), {
+    type: 'bar',
+    data: {
+        labels: bloodLabels,
+        datasets: [{
+            label: "Blood Units",
+            data: bloodValues,
+            backgroundColor: "rgba(220,53,69,0.8)"
+        }]
+    },
+    options: {
+        responsive: true,
+        animation: {
+            duration: 1500
+        }
+    }
+});
+
+new Chart(document.getElementById("pieChart"), {
+    type: 'pie',
+    data: {
+        labels: bloodLabels,
+        datasets: [{
+            data: bloodValues
+        }]
+    },
+    options: {
+        responsive: true,
+        animation: {
+            animateRotate: true,
+            duration: 1500
+        }
+    }
+});
+</script>
+
+{% endblock %}
