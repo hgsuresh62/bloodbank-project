@@ -1,29 +1,75 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2 style="margin-bottom:20px;">Partner Hospitals</h2>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+    <h2>🏥 Partner Hospitals</h2>
 
-<div class="card">
+    {% if session['role']=='admin' %}
+    <a href="/add_hospital">
+        <button style="
+        padding:10px 18px;
+        background:green;
+        color:white;
+        border:none;
+        border-radius:8px;
+        cursor:pointer;">
+        ➕ Add Hospital
+        </button>
+    </a>
+    {% endif %}
+</div>
 
-<table style="width:100%; border-collapse:collapse;">
+<div class="card" style="padding:20px; border-radius:12px; box-shadow:0px 3px 15px rgba(0,0,0,0.1);">
 
-    <tr style="background-color:#ffe5ec;">
-        <th style="padding:12px;">ID</th>
-        <th style="padding:12px;">Hospital Name</th>
-        <th style="padding:12px;">District</th>
-        <th style="padding:12px;">Phone</th>
-        <th style="padding:12px;">Location</th>
-    </tr>
+<table style="width:100%; border-collapse:collapse; text-align:center;">
 
-    {% for hospital in hospitals %}
-    <tr style="text-align:center; border-top:1px solid #eee;">
-        <td style="padding:10px;">{{ hospital[0] }}</td>
-        <td style="padding:10px;">{{ hospital[1] }}</td>
-        <td style="padding:10px;">{{ hospital[2] }}</td>
-        <td style="padding:10px;">{{ hospital[3] }}</td>
-        <td style="padding:10px;">{{ hospital[4] }}</td>
-    </tr>
-    {% endfor %}
+<tr style="background:#ffe5ec;">
+    <th style="padding:12px;">ID</th>
+    <th>Hospital Name</th>
+    <th>Location</th>
+    <th>Phone</th>
+
+    {% if session['role']=='admin' %}
+    <th>Actions</th>
+    {% endif %}
+</tr>
+
+{% for hospital in hospitals %}
+<tr style="border-top:1px solid #eee;">
+
+    <td style="padding:10px;">{{ hospital[0] }}</td>
+    <td>{{ hospital[1] }}</td>
+    <td>{{ hospital[2] }}</td>
+    <td>{{ hospital[3] }}</td>
+
+    {% if session['role']=='admin' %}
+    <td>
+
+        <a href="/edit_hospital/{{ hospital[0] }}">
+            <button style="margin-right:6px; padding:6px 12px;">
+            ✏ Edit
+            </button>
+        </a>
+
+        <a href="/delete_hospital/{{ hospital[0] }}"
+           onclick="return confirm('Delete hospital?')">
+
+            <button style="
+            padding:6px 12px;
+            background:red;
+            color:white;
+            border:none;
+            border-radius:6px;">
+            🗑 Delete
+            </button>
+
+        </a>
+
+    </td>
+    {% endif %}
+
+</tr>
+{% endfor %}
 
 </table>
 

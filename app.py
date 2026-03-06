@@ -667,6 +667,104 @@ def delete_request(request_id):
 
 
 
+@app.route("/add_hospital", methods=["GET","POST"])
+@login_required
+def add_hospital():
+
+    if session.get("role") != "admin":
+        flash("Unauthorized ❌ Admin only")
+        return redirect(url_for("home"))
+
+    if request.method == "POST":
+
+        conn = get_db()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+INSERT INTO hospitals (name, location, phone)
+VALUES (?, ?, ?)
+""", (
+    request.form.get("name"),
+    request.form.get("location"),
+    request.form.get("phone")
+))
+
+        conn.commit()
+        conn.close()
+
+        flash("Hospital added successfully ✅")
+        return redirect(url_for("hospitals"))
+
+    return render_template("add_hospital.html")
+
+
+
+@app.route("/edit_hospital/<int:id>", methods=["GET","POST"])
+@login_required
+def edit_hospital(id):
+
+    if session.get("role") != "admin":
+        flash("Unauthorized ❌ Admin only")
+        return redirect(url_for("hospitals"))
+
+    conn = get_db()
+    cursor = conn.cursor()
+
+    try:
+
+        if request.method == "POST":
+
+            cursor.execute("""
+            UPDATE hospitals
+            SET name=?, location=?, phone=?
+            WHERE id=?
+            """, (
+                request.form.get("name"),
+                request.form.get("location"),
+                request.form.get("phone"),
+                id
+            ))
+
+            conn.commit()
+            flash("Hospital updated successfully ✅")
+
+            return redirect(url_for("hospitals"))
+
+        cursor.execute("SELECT * FROM hospitals WHERE id=?", (id,))
+        hospital = cursor.fetchone()
+
+        conn.close()
+
+        return render_template("edit_hospital.html", hospital=hospital)
+
+    except Exception as e:
+        print("Edit hospital error:", e)
+        return "Internal Server Error"
+
+
+
+@app.route("/delete_hospital/<int:id>")
+@login_required
+def delete_hospital(id):
+
+    if session.get("role") != "admin":
+        flash("Unauthorized ❌ Admin only")
+        return redirect(url_for("hospitals"))
+
+    conn = get_db()
+    cursor = conn.cursor()
+
+    cursor.execute("DELETE FROM hospitals WHERE id=?", (id,))
+
+    conn.commit()
+    conn.close()
+
+    flash("Hospital deleted successfully ✅")
+    return redirect(url_for("hospitals"))
+
+
+
+
 # ============================
 # LOGOUT
 # ============================
@@ -692,8 +790,4 @@ if __name__ == "__main__":
 
     port = int(os.environ.get("PORT", 8000))
 
-    app.run(
-        host="0.0.0.0",
-        port=port,
-        debug=False
-    )
+app.run(host="0.0.0.0", port=port, debug=True)
