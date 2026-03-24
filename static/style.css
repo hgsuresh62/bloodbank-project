@@ -91,29 +91,36 @@ a:hover {
 }
 
 /* ================= MOBILE RESPONSIVE ================= */
-@media (max-width: 768px) {
+/* ================= MOBILE FIX ================= */
+@media (max-width: 768px){
 
-    body {
-        padding: 10px;
+    .login-container{
+        flex-direction: column;   /* stack */
+        margin:10px;
     }
 
-    form {
-        padding: 15px;
+    .login-left{
+        display:flex;
+        height:200px;   /* 🔥 control image size */
+        padding:20px;
+        text-align:center;
+        justify-content:center;
+        align-items:center;
     }
 
-    table {
-        width: 100%;
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
+    .login-left h1{
+        font-size:20px;
     }
 
-    th, td {
-        font-size: 14px;
-        padding: 8px;
+    .login-left p{
+        font-size:12px;
     }
 
-    h2, h3 {
-        font-size: 18px;
+    .login-right{
+        padding:20px;
+    }
+
+    h2{
+        text-align:center;
     }
 }
