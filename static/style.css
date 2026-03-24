@@ -3,6 +3,7 @@ body {
     background-color: #fff0f0;
     color: #330000;
     padding: 20px;
+    margin: 0;
 }
 
 h2, h3 {
@@ -10,8 +11,10 @@ h2, h3 {
     text-align: center;
 }
 
+/* FORM */
 form {
     max-width: 500px;
+    width: 100%;
     margin: 0 auto;
     background-color: #ffe6e6;
     padding: 20px;
@@ -23,16 +26,17 @@ form input[type="text"],
 form input[type="number"],
 form input[type="email"] {
     width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
+    padding: 10px;
+    margin-bottom: 12px;
     border: 1px solid #b30000;
     border-radius: 5px;
+    box-sizing: border-box;
 }
 
 form input[type="submit"] {
     background-color: #b30000;
     color: white;
-    padding: 10px;
+    padding: 12px;
     width: 100%;
     border: none;
     border-radius: 5px;
@@ -43,6 +47,7 @@ form input[type="submit"]:hover {
     background-color: #800000;
 }
 
+/* TABLE */
 table {
     width: 90%;
     margin: 20px auto;
@@ -73,6 +78,7 @@ tr:hover {
     background-color: #ffd6d6;
 }
 
+/* LINKS */
 a {
     color: #b30000;
     text-decoration: none;
@@ -82,4 +88,32 @@ a {
 a:hover {
     color: #800000;
     text-decoration: underline;
+}
+
+/* ================= MOBILE RESPONSIVE ================= */
+@media (max-width: 768px) {
+
+    body {
+        padding: 10px;
+    }
+
+    form {
+        padding: 15px;
+    }
+
+    table {
+        width: 100%;
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    th, td {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    h2, h3 {
+        font-size: 18px;
+    }
 }
