@@ -1,22 +1,26 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="card" style="max-width:700px; margin:auto;">
+<div class="card" style="
+    max-width:700px;
+    margin:auto;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0px 5px 20px rgba(0,0,0,0.1);
+">
 
-<h2 style="margin-bottom:20px;">Add Donor</h2>
+<h2 style="text-align:center; margin-bottom:20px;">🩸 Add Donor</h2>
 
 <form method="POST">
 
-
-
 <label>Name</label>
-<input type="text" name="name" required>
+<input type="text" name="name" required class="form-control">
 
 <label>Age</label>
-<input type="number" name="age" required>
+<input type="number" name="age" required class="form-control">
 
 <label>Gender</label>
-<select name="gender" required>
+<select name="gender" required class="form-control">
     <option value="">Select Gender</option>
     <option>Male</option>
     <option>Female</option>
@@ -24,7 +28,7 @@
 </select>
 
 <label>Blood Group</label>
-<select name="blood_group" required>
+<select name="blood_group" required class="form-control">
     <option value="">Select Blood Group</option>
     <option>A+</option>
     <option>A-</option>
@@ -37,19 +41,21 @@
 </select>
 
 <label>District</label>
-<input type="text" name="district" required>
+<input type="text" name="district" required class="form-control">
 
 <label>Phone</label>
-<input type="text" name="phone" required>
+<input type="text" name="phone" required class="form-control">
 
 <label>Email</label>
-<input type="email" name="email" required>
+<input type="email" name="email" required class="form-control">
 
 <label>Short Bio</label>
-<input type="text" name="bio">
+<textarea name="bio" class="form-control" rows="3"></textarea>
 
-<button class="btn btn-primary" type="submit" style="width:100%;">
-    Add Donor
+<br>
+
+<button class="btn btn-success" type="submit" style="width:100%;">
+    ➕ Add Donor
 </button>
 
 </form>

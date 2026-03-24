@@ -11,25 +11,27 @@ def get_db():
 
 
 def send_email(subject, body, to_email):
-
-    sender_email = "bloodbankproject02@gmail.com"
-    sender_password = "kvmkeunlgkthyxzh"
-
-    msg = MIMEText(body)
-    msg["Subject"] = subject
-    msg["From"] = sender_email
-    msg["To"] = to_email
-
     try:
+        sender_email = "bloodbankproject02@gmail.com"
+        sender_password = "kvmkeunlgkthyxzh"
+
+        msg = MIMEText(body)
+        msg["Subject"] = subject
+        msg["From"] = sender_email
+        msg["To"] = to_email
+
         server = smtplib.SMTP("smtp.gmail.com", 587)
         server.starttls()
         server.login(sender_email, sender_password)
+
         server.sendmail(sender_email, to_email, msg.as_string())
         server.quit()
-        print("Email sent successfully ✅")
+
+        print("✅ Email sent to", to_email)
 
     except Exception as e:
-        print("Email sending failed ❌", e)
+        import traceback
+        traceback.print_exc()
 
 
 app = Flask(__name__)
@@ -259,13 +261,11 @@ def dashboard():
 # ADD DONOR
 # ============================
 
+import time
+
 @app.route("/add_donor", methods=["GET","POST"])
 @login_required
 def add_donor():
-
-    if session.get("role") != "admin":
-        flash("Unauthorized ❌ Admin only")
-        return redirect(url_for("home"))
 
     conn = get_db()
     cursor = conn.cursor()
@@ -275,6 +275,7 @@ def add_donor():
         cursor.execute("SELECT COALESCE(MAX(donor_id),0)+1 FROM donors")
         new_id = cursor.fetchone()[0]
 
+        # Insert donor
         cursor.execute("""
         INSERT INTO donors
         (donor_id,name,age,gender,blood_group,district,phone,email,bio)
@@ -292,14 +293,61 @@ def add_donor():
         ))
 
         conn.commit()
+
+        # ============================
+        # 📧 EMAIL TO ADMIN
+        # ============================
+        admin_email = "hgsuresh62@gmail.com"
+
+        subject_admin = "New Donor Registered 🩸"
+
+        body_admin = f"""
+New Donor Added
+
+Name: {request.form["name"]}
+Age: {request.form["age"]}
+Gender: {request.form["gender"]}
+Blood Group: {request.form["blood_group"]}
+District: {request.form["district"]}
+Phone: {request.form["phone"]}
+Email: {request.form["email"]}
+
+Added By: {session.get("username")} ({session.get("role")})
+
+Blood Bank System
+"""
+
+        send_email(subject_admin, body_admin, admin_email)
+
+        # 🔥 ADD DELAY
+        time.sleep(2)
+
+        # ============================
+        # 📧 EMAIL TO DONOR
+        # ============================
+        donor_email = request.form["email"]
+
+        subject_user = "Thank You for Donating 🩸"
+
+        body_user = f"""
+Hello {request.form["name"]},
+
+Thank you for registering as a blood donor ❤️
+
+Your contribution can save lives.
+
+Blood Bank Team
+"""
+
+        send_email(subject_user, body_user, donor_email)
+
         conn.close()
 
-        flash("Donor Added Successfully ✅")
+        flash("Donor Added Successfully & Emails Sent ✅")
         return redirect(url_for("add_donor"))
 
     conn.close()
     return render_template("add_donor.html")
-
 # ============================
 # HOSPITALS
 # ============================
