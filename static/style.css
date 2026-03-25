@@ -24,7 +24,9 @@ form {
 
 form input[type="text"],
 form input[type="number"],
-form input[type="email"] {
+form input[type="email"],
+form input[type="password"],
+form select {
     width: 100%;
     padding: 10px;
     margin-bottom: 12px;
@@ -33,7 +35,9 @@ form input[type="email"] {
     box-sizing: border-box;
 }
 
-form input[type="submit"] {
+/* BUTTON */
+form input[type="submit"],
+button {
     background-color: #b30000;
     color: white;
     padding: 12px;
@@ -43,17 +47,18 @@ form input[type="submit"] {
     cursor: pointer;
 }
 
-form input[type="submit"]:hover {
+form input[type="submit"]:hover,
+button:hover {
     background-color: #800000;
 }
 
 /* TABLE */
 table {
-    width: 90%;
+    width: 95%;
     margin: 20px auto;
     border-collapse: collapse;
     border-radius: 10px;
-    overflow: hidden;
+    overflow-x: auto;
 }
 
 table, th, td {
@@ -90,37 +95,78 @@ a:hover {
     text-decoration: underline;
 }
 
+/* ================= LOGIN FIX ================= */
+.login-container {
+    display: flex;
+    width: 100%;
+    max-width: 900px;
+    margin: 40px auto;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+.login-left,
+.login-right {
+    flex: 1;
+}
+
 /* ================= MOBILE RESPONSIVE ================= */
-/* ================= MOBILE FIX ================= */
 @media (max-width: 768px){
 
-    .login-container{
-        flex-direction: column;   /* stack */
-        margin:10px;
+    body {
+        padding: 10px;
     }
 
-    .login-left{
-        display:flex;
-        height:200px;   /* 🔥 control image size */
-        padding:20px;
-        text-align:center;
-        justify-content:center;
-        align-items:center;
+    /* STACK layout */
+    .login-container {
+        flex-direction: column;
+        margin: 10px;
     }
 
-    .login-left h1{
-        font-size:20px;
+    /* IMAGE SECTION */
+    .login-left {
+        height: 180px;
+        padding: 15px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
-    .login-left p{
-        font-size:12px;
+    .login-left h1 {
+        font-size: 20px;
     }
 
-    .login-right{
-        padding:20px;
+    .login-left p {
+        font-size: 12px;
     }
 
-    h2{
-        text-align:center;
+    /* FORM SECTION */
+    .login-right {
+        padding: 15px;
+    }
+
+    /* NAVBAR FIX */
+    .navbar {
+        flex-direction: column;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .nav-links a {
+        margin: 6px;
+        font-size: 14px;
+    }
+
+    /* TABLE SCROLL FIX */
+    table {
+        display: block;
+        overflow-x: auto;
     }
 }
