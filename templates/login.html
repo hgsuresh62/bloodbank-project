@@ -10,16 +10,17 @@ body{
 /* Container */
 .login-container{
     display:flex;
-    min-height:90vh;
+    flex-wrap: wrap;   /* 🔥 IMPORTANT */
     border-radius:20px;
     overflow:hidden;
     box-shadow:0 20px 40px rgba(0,0,0,0.2);
-    margin:40px;
+    margin:20px;
 }
 
 /* LEFT */
 .login-left{
     flex:1;
+    min-width:300px;   /* 🔥 prevents shrink */
     background:linear-gradient(rgba(10,10,40,0.7),rgba(10,10,40,0.7)),
     url("{{ url_for('static', filename='blood-bg.jpg') }}");
 
@@ -27,7 +28,7 @@ body{
     background-position:center;
 
     color:white;
-    padding:60px;
+    padding:40px;
 
     display:flex;
     flex-direction:column;
@@ -37,10 +38,9 @@ body{
 /* RIGHT */
 .login-right{
     flex:1;
+    min-width:300px;   /* 🔥 prevents cut */
     background:rgba(255,255,255,0.95);
-    backdrop-filter:blur(10px);
-
-    padding:60px;
+    padding:40px;
 
     display:flex;
     flex-direction:column;
@@ -49,14 +49,13 @@ body{
 
 /* Input */
 .input-group{
-    position:relative;
     margin-bottom:20px;
 }
 
 .input-group input,
 .input-group select{
     width:100%;
-    padding:12px 15px;
+    padding:12px;
     border-radius:10px;
     border:1px solid #ccc;
     font-size:15px;
@@ -71,11 +70,6 @@ body{
     background:linear-gradient(90deg,#d90429,#9d0208);
     color:white;
     font-weight:bold;
-    cursor:pointer;
-}
-
-.login-btn:hover{
-    opacity:0.9;
 }
 
 /* Error */
@@ -88,15 +82,26 @@ body{
     text-align:center;
 }
 
-.register-link{
-    margin-top:15px;
-    text-align:center;
-}
+/* ================= MOBILE FIX ================= */
+@media (max-width: 768px){
 
-.register-link a{
-    color:#d90429;
-    font-weight:bold;
-    text-decoration:none;
+    .login-container{
+        flex-direction: column;   /* 🔥 stack */
+    }
+
+    .login-left{
+        height:180px;
+        padding:20px;
+        text-align:center;
+    }
+
+    .login-right{
+        padding:20px;
+    }
+
+    h2{
+        text-align:center;
+    }
 }
 
 </style>
@@ -123,7 +128,6 @@ body{
 
 <form method="POST" action="{{ url_for('login') }}">
 
-<!-- ROLE -->
 <div class="input-group">
 <select name="role" required>
 <option value="">Select Role</option>
