@@ -21,7 +21,7 @@ body{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    padding:18px 60px;
+    padding:18px 40px;
     background:rgba(255,255,255,0.85);
     backdrop-filter:blur(10px);
     box-shadow:0 8px 30px rgba(0,0,0,0.05);
@@ -30,11 +30,23 @@ body{
     z-index:1000;
 }
 
-.logo{
-    font-size:24px;
+/* 🔥 LOGO FIX */
+.logo-container{
+    display:flex;
+    flex-direction:column;   /* heart on top */
+    align-items:center;
+}
+
+.logo-img{
+    width:35px;   /* 🔥 control size here */
+    height:auto;
+}
+
+.logo-text{
+    font-size:20px;
     font-weight:700;
     color:#d90429;
-    letter-spacing:1px;
+    margin-top:3px;
 }
 
 /* NAV LINKS */
@@ -44,7 +56,7 @@ body{
 }
 
 .nav-links a{
-    margin:0 16px;
+    margin:0 14px;
     text-decoration:none;
     color:#2b2d42;
     font-weight:500;
@@ -79,22 +91,16 @@ body{
     cursor:pointer;
     font-size:15px;
     font-weight:600;
-    transition:0.3s ease;
 }
 
 .btn-primary{
     background:linear-gradient(135deg,#d90429,#ef233c);
     color:white;
-    box-shadow:0 8px 20px rgba(217,4,41,0.3);
 }
 
-.btn-primary:hover{
-    transform:translateY(-3px);
-    box-shadow:0 12px 25px rgba(217,4,41,0.4);
-}
-
+/* CONTAINER */
 .container{
-    padding:60px;
+    padding:50px;
 }
 
 /* CARD */
@@ -104,11 +110,6 @@ body{
     border-radius:18px;
     box-shadow:0 15px 35px rgba(0,0,0,0.06);
     margin-bottom:30px;
-    transition:0.3s ease;
-}
-
-.card:hover{
-    transform:translateY(-6px);
 }
 
 /* INPUT */
@@ -121,16 +122,6 @@ input,select{
     font-size:14px;
 }
 
-input:focus,select:focus{
-    border-color:#d90429;
-    outline:none;
-    box-shadow:0 0 0 3px rgba(217,4,41,0.1);
-}
-
-h2{
-    font-weight:600;
-}
-
 /* FLASH MESSAGE */
 .flash-success{
     padding:15px 20px;
@@ -139,38 +130,38 @@ h2{
     background:#d4edda;
     color:#155724;
     font-weight:500;
-    box-shadow:0 8px 20px rgba(0,0,0,0.05);
-    animation:fadeIn 0.4s ease-in-out;
 }
 
-@keyframes fadeIn{
-    from{opacity:0; transform:translateY(-10px);}
-    to{opacity:1; transform:translateY(0);}
-}
-
-/* ============================= */
-/* ✅ MOBILE RESPONSIVE FIX */
-/* ============================= */
+/* ================= MOBILE ================= */
 @media (max-width: 768px){
 
     .navbar{
         flex-direction:column;
-        align-items:flex-start;
-        padding:15px 20px;
+        align-items:center;
+        padding:15px;
     }
 
     .nav-links{
         flex-wrap:wrap;
+        justify-content:center;
         margin-top:10px;
     }
 
     .nav-links a{
-        margin:5px 8px;
+        margin:6px;
         font-size:14px;
     }
 
     .container{
         padding:20px;
+    }
+
+    .logo-img{
+        width:28px;   /* smaller for mobile */
+    }
+
+    .logo-text{
+        font-size:18px;
     }
 }
 
@@ -182,20 +173,18 @@ h2{
 <!-- NAVBAR -->
 <div class="navbar">
 
-<div class="logo">❤️ LifeLink</div>
+<div class="logo-container">
+    <img src="{{ url_for('static', filename='logo.png') }}" class="logo-img">
+    <div class="logo-text">LifeLink</div>
+</div>
 
 <div class="nav-links">
 
 <a href="{{ url_for('home') }}">Home</a>
-
 <a href="{{ url_for('dashboard') }}">Dashboard</a>
-
 <a href="{{ url_for('hospitals') }}">Hospitals</a>
-
 <a href="{{ url_for('donors') }}">View Donors</a>
-
 <a href="{{ url_for('findblood') }}">Find Blood</a>
-
 <a href="{{ url_for('request_blood') }}">Request Blood</a>
 
 {% if session.get("role") == "admin" %}
@@ -210,7 +199,6 @@ h2{
 
 <div class="container">
 
-<!-- FLASH MESSAGE -->
 {% with messages = get_flashed_messages() %}
 {% if messages %}
 {% for message in messages %}
