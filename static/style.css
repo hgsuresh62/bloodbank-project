@@ -1,172 +1,125 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #fff0f0;
-    color: #330000;
-    padding: 20px;
-    margin: 0;
+body{
+    background:#f5f7fa;
 }
 
-h2, h3 {
-    color: #b30000;
-    text-align: center;
+/* Container */
+.login-container{
+    display:flex;
+    flex-wrap:wrap;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 15px 30px rgba(0,0,0,0.15);
+    margin:30px auto;
+    max-width:950px;
+}
+
+/* LEFT */
+.login-left{
+    flex:1;
+    min-height:300px;
+    background:linear-gradient(rgba(10,10,40,0.7),rgba(10,10,40,0.7)),
+    url("{{ url_for('static', filename='blood-bg.jpg') }}");
+
+    background-size:cover;
+    background-position:center;
+
+    color:white;
+    padding:40px;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.login-left h1{
+    font-size:28px;
+}
+
+.login-left p{
+    font-size:14px;
+    opacity:0.9;
+}
+
+/* RIGHT */
+.login-right{
+    flex:1;
+    background:rgba(255,255,255,0.97);
+    padding:40px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
 }
 
 /* FORM */
-form {
-    max-width: 500px;
-    width: 100%;
-    margin: 0 auto;
-    background-color: #ffe6e6;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 2px 2px 10px #cc9999;
+form{
+    margin-top:10px;
 }
 
-form input[type="text"],
-form input[type="number"],
-form input[type="email"],
-form input[type="password"],
-form select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 12px;
-    border: 1px solid #b30000;
-    border-radius: 5px;
-    box-sizing: border-box;
+/* Input */
+.input-group{
+    margin-bottom:18px;
 }
 
-/* BUTTON */
-form input[type="submit"],
-button {
-    background-color: #b30000;
-    color: white;
-    padding: 12px;
-    width: 100%;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+.input-group input,
+.input-group select{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    font-size:15px;
 }
 
-form input[type="submit"]:hover,
-button:hover {
-    background-color: #800000;
+/* Button */
+.login-btn{
+    width:100%;
+    padding:13px;
+    border:none;
+    border-radius:10px;
+    background:linear-gradient(90deg,#d90429,#9d0208);
+    color:white;
+    font-weight:bold;
+    font-size:15px;
 }
 
-/* TABLE */
-table {
-    width: 95%;
-    margin: 20px auto;
-    border-collapse: collapse;
-    border-radius: 10px;
-    overflow-x: auto;
+/* Error */
+.error-box{
+    background:linear-gradient(90deg,#ff4d4d,#b30000);
+    color:white;
+    padding:10px;
+    border-radius:10px;
+    margin-bottom:15px;
+    text-align:center;
 }
 
-table, th, td {
-    border: 1px solid #b30000;
+/* Link */
+.register-link{
+    margin-top:15px;
+    text-align:center;
 }
 
-th, td {
-    padding: 10px;
-    text-align: center;
-}
-
-th {
-    background-color: #ff8080;
-    color: #330000;
-}
-
-tr:nth-child(even) {
-    background-color: #ffe6e6;
-}
-
-tr:hover {
-    background-color: #ffd6d6;
-}
-
-/* LINKS */
-a {
-    color: #b30000;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-a:hover {
-    color: #800000;
-    text-decoration: underline;
-}
-
-/* ================= LOGIN FIX ================= */
-.login-container {
-    display: flex;
-    width: 100%;
-    max-width: 900px;
-    margin: 40px auto;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-}
-
-.login-left,
-.login-right {
-    flex: 1;
-}
-
-/* ================= MOBILE RESPONSIVE ================= */
+/* ================= MOBILE ================= */
 @media (max-width: 768px){
 
-    body {
-        padding: 10px;
+    .login-container{
+        flex-direction:column;
+        margin:10px;
     }
 
-    /* STACK layout */
-    .login-container {
-        flex-direction: column;
-        margin: 10px;
+    .login-left{
+        height:160px;
+        padding:20px;
+        text-align:center;
     }
 
-    /* IMAGE SECTION */
-    .login-left {
-        height: 180px;
-        padding: 15px;
-        text-align: center;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    .login-left h1{
+        font-size:22px;
     }
 
-    .login-left h1 {
-        font-size: 20px;
+    .login-left p{
+        font-size:12px;
     }
 
-    .login-left p {
-        font-size: 12px;
-    }
-
-    /* FORM SECTION */
-    .login-right {
-        padding: 15px;
-    }
-
-    /* NAVBAR FIX */
-    .navbar {
-        flex-direction: column;
-        padding: 10px;
-        text-align: center;
-    }
-
-    .nav-links {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    .nav-links a {
-        margin: 6px;
-        font-size: 14px;
-    }
-
-    /* TABLE SCROLL FIX */
-    table {
-        display: block;
-        overflow-x: auto;
+    .login-right{
+        padding:20px;
     }
 }
