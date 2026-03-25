@@ -10,17 +10,17 @@ body{
 /* Container */
 .login-container{
     display:flex;
-    flex-wrap: wrap;   /* 🔥 IMPORTANT */
+    flex-wrap:wrap;
     border-radius:20px;
     overflow:hidden;
     box-shadow:0 20px 40px rgba(0,0,0,0.2);
-    margin:20px;
+    margin:20px auto;
+    max-width:1000px;
 }
 
 /* LEFT */
 .login-left{
     flex:1;
-    min-width:300px;   /* 🔥 prevents shrink */
     background:linear-gradient(rgba(10,10,40,0.7),rgba(10,10,40,0.7)),
     url("{{ url_for('static', filename='blood-bg.jpg') }}");
 
@@ -38,7 +38,6 @@ body{
 /* RIGHT */
 .login-right{
     flex:1;
-    min-width:300px;   /* 🔥 prevents cut */
     background:rgba(255,255,255,0.95);
     padding:40px;
 
@@ -86,7 +85,8 @@ body{
 @media (max-width: 768px){
 
     .login-container{
-        flex-direction: column;   /* 🔥 stack */
+        flex-direction:column;
+        margin:10px;
     }
 
     .login-left{
