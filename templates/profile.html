@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div style="max-width:900px; margin:auto;">
+
+<h2 style="text-align:center;">👤 User Profile Dashboard</h2>
+
+<!-- USER INFO -->
+<div class="card" style="padding:20px; margin-bottom:20px;">
+    <h4>👤 User Info</h4>
+    <p><strong>Username:</strong> {{ username }}</p>
+    <p><strong>Role:</strong> {{ role }}</p>
+</div>
+
+<!-- STATS -->
+<div style="display:flex; gap:15px; flex-wrap:wrap;">
+
+<div class="card" style="flex:1; padding:20px;">
+    <h4>🩸 Total Donors</h4>
+    <h2>{{ total_donors }}</h2>
+</div>
+
+<div class="card" style="flex:1; padding:20px;">
+    <h4>🏆 Most Common Blood Group</h4>
+    <h2>{{ common_bg[0] if common_bg else 'N/A' }}</h2>
+</div>
+
+<div class="card" style="flex:1; padding:20px;">
+    <h4>🆕 Last Donor</h4>
+    <p>
+        {{ last_donor[0] if last_donor else 'N/A' }} <br>
+        {{ last_donor[1] if last_donor else '' }}
+    </p>
+</div>
+
+</div>
+
+<br>
+
+<!-- RECENT DONORS -->
+<div class="card" style="padding:20px;">
+    <h4>📋 Recent Donors</h4>
+
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Blood Group</th>
+            <th>District</th>
+        </tr>
+
+        {% for d in recent_donors %}
+        <tr>
+            <td>{{ d[0] }}</td>
+            <td>{{ d[1] }}</td>
+            <td>{{ d[2] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+</div>
+
+{% endblock %}

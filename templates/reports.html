@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 style="text-align:center;">📊 Advanced Reports Dashboard</h2>
+
+<!-- SUMMARY -->
+<div style="display:flex; gap:10px; flex-wrap:wrap;">
+    <div class="card" style="padding:15px;">Total: {{ total_donors }}</div>
+    <div class="card" style="padding:15px;">Top Blood: {{ common_bg[0] if common_bg else 'N/A' }}</div>
+    <div class="card" style="padding:15px;">Top District: {{ top_district[0] if top_district else 'N/A' }}</div>
+</div>
+
+<!-- ALERTS -->
+<div class="card" style="padding:15px; margin-top:15px;">
+<h4>⚠️ Rare Blood Groups</h4>
+{% for r in rare_groups %}
+<p>{{ r[0] }} ({{ r[1] }})</p>
+{% endfor %}
+</div>
+
+<div class="card" style="padding:15px;">
+<h4>🚨 Low Districts</h4>
+{% for d in low_districts %}
+<p>{{ d[0] }} ({{ d[1] }})</p>
+{% endfor %}
+</div>
+
+<!-- ELIGIBILITY -->
+<div class="card" style="padding:15px;">
+<h4>Eligibility</h4>
+<p>Eligible: {{ eligible }}</p>
+<p>Not Eligible: {{ not_eligible }}</p>
+</div>
+
+<!-- CHARTS -->
+<canvas id="bloodChart" width="200" height="200"></canvas>
+<canvas id="districtChart"></canvas>
+<canvas id="genderChart" width="200" height="200"></canvas>
+<canvas id="ageChart"></canvas>
+
+<!-- TABLE -->
+<table class="table">
+<tr>
+<th>Name</th><th>Blood</th><th>District</th><th>Phone</th><th>Age</th>
+</tr>
+{% for d in donors %}
+<tr>
+<td>{{ d[0] }}</td>
+<td>{{ d[1] }}</td>
+<td>{{ d[2] }}</td>
+<td>{{ d[3] }}</td>
+<td>{{ d[4] }}</td>
+</tr>
+{% endfor %}
+</table>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+// ✅ SAFE DATA (VERY IMPORTANT)
+var blood_data = JSON.parse('{{ blood_data | tojson | safe }}');
+var district_data = JSON.parse('{{ district_data | tojson | safe }}');
+var gender_data = JSON.parse('{{ gender_data | tojson | safe }}');
+var age_data = JSON.parse('{{ age_data | tojson | safe }}');
+
+// 🩸 Blood Pie
+new Chart(document.getElementById("bloodChart"), {
+    type: "pie",
+    data: {
+        labels: blood_data.map(x=>x[0]),
+        datasets:[{data: blood_data.map(x=>x[1])}]
+    },
+    options:{responsive:false}
+});
+
+// 📍 District Bar
+new Chart(document.getElementById("districtChart"), {
+    type: "bar",
+    data: {
+        labels: district_data.map(x=>x[0]),
+        datasets:[{data: district_data.map(x=>x[1])}]
+    }
+});
+
+// 👤 Gender Pie
+new Chart(document.getElementById("genderChart"), {
+    type: "pie",
+    data: {
+        labels: gender_data.map(x=>x[0]),
+        datasets:[{data: gender_data.map(x=>x[1])}]
+    },
+    options:{responsive:false}
+});
+
+// 📊 Age Chart (FIXED)
+new Chart(document.getElementById("ageChart"), {
+    type: "bar",
+    data: {
+        labels:["<25","25-40","40+"],
+        datasets:[{
+            data: age_data
+        }]
+    }
+});
+
+</script>
+
+{% endblock %}

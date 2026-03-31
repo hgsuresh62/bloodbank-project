@@ -263,6 +263,10 @@ def dashboard():
 
 import time
 
+from datetime import datetime
+
+import random
+
 @app.route("/add_donor", methods=["GET","POST"])
 @login_required
 def add_donor():
@@ -272,82 +276,429 @@ def add_donor():
 
     if request.method == "POST":
 
-        cursor.execute("SELECT COALESCE(MAX(donor_id),0)+1 FROM donors")
-        new_id = cursor.fetchone()[0]
+        # ============================
+        # 🔹 GET FORM DATA
+        # ============================
+        form_data = request.form.to_dict()
 
-        # Insert donor
-        cursor.execute("""
-        INSERT INTO donors
-        (donor_id,name,age,gender,blood_group,district,phone,email,bio)
-        VALUES(?,?,?,?,?,?,?,?,?)
-        """, (
-            new_id,
-            request.form["name"],
-            request.form["age"],
-            request.form["gender"],
-            request.form["blood_group"],
-            request.form["district"],
-            request.form["phone"],
-            request.form["email"],
-            request.form["bio"]
-        ))
+        name = form_data["name"]
+        age = int(form_data["age"])
+        gender = form_data["gender"]
+        blood_group = form_data["blood_group"]
+        district = form_data["district"]
+        phone = form_data["phone"]
+        email = form_data["email"]
+        bio = form_data["bio"]
 
-        conn.commit()
+        weight = float(form_data["weight"])
+        hemoglobin = float(form_data["hemoglobin"])
+        donated_before = form_data["donated_before"]
+        last_donation = form_data.get("last_donation")
+        disease = form_data["disease"]
+        sick = form_data["sick"]
 
         # ============================
-        # 📧 EMAIL TO ADMIN
+        # 🔥 ELIGIBILITY CHECK
         # ============================
-        admin_email = "hgsuresh62@gmail.com"
+        if age < 18 or age > 65:
+            flash("❌ Age must be between 18 and 65")
+            conn.close()
+            return redirect(url_for("add_donor"))
 
-        subject_admin = "New Donor Registered 🩸"
+        if weight < 50:
+            flash("❌ Weight must be at least 50 kg")
+            conn.close()
+            return redirect(url_for("add_donor"))
 
-        body_admin = f"""
+        if hemoglobin < 12.5:
+            flash("❌ Hemoglobin must be at least 12.5 g/dL")
+            conn.close()
+            return redirect(url_for("add_donor"))
+
+        if disease == "yes":
+            flash("❌ Not eligible due to medical condition")
+            conn.close()
+            return redirect(url_for("add_donor"))
+
+        if sick == "yes":
+            flash("❌ You must be healthy to donate")
+            conn.close()
+            return redirect(url_for("add_donor"))
+
+        if donated_before == "yes":
+            if not last_donation:
+                flash("❌ Please enter last donation date")
+                conn.close()
+                return redirect(url_for("add_donor"))
+
+            last_date = datetime.strptime(last_donation, "%Y-%m-%d")
+            days = (datetime.now() - last_date).days
+
+            if days < 90:
+                flash("❌ You must wait 3 months before donating again")
+                conn.close()
+                return redirect(url_for("add_donor"))
+
+        # ============================
+        # 🔥 GENERATE OTP (NEW PART)
+        # ============================
+        otp = str(random.randint(100000, 999999))
+
+        session["otp"] = otp
+        session["form_data"] = form_data
+
+        # ============================
+        # 📧 SEND OTP EMAIL (NEW PART)
+        # ============================
+        subject = "OTP Verification - Blood Bank 🩸"
+
+        body = f"""
+Hello {name},
+
+Your OTP for donor registration is: {otp}
+
+Please enter this OTP to complete your registration.
+
+Blood Bank Team
+"""
+
+        send_email(subject, body, email)
+
+        conn.close()
+
+        flash("📧 OTP sent to email. Please verify.")
+        return redirect(url_for("verify_otp"))
+
+    conn.close()
+    return render_template("add_donor.html")
+
+
+
+
+import time
+
+@app.route("/verify_otp", methods=["GET","POST"])
+@login_required
+def verify_otp():
+
+    if request.method == "POST":
+
+        try:
+            user_otp = request.form["otp"]
+
+            # ============================
+            # 🔹 CHECK OTP
+            # ============================
+            if user_otp == session.get("otp"):
+
+                data = session.get("form_data")
+
+                if not data:
+                    flash("❌ Session expired. Please try again.")
+                    return redirect(url_for("add_donor"))
+
+                conn = get_db()
+                cursor = conn.cursor()
+
+                # ============================
+                # ✅ INSERT DONOR
+                # ============================
+                cursor.execute("SELECT COALESCE(MAX(donor_id),0)+1 FROM donors")
+                new_id = cursor.fetchone()[0]
+
+                cursor.execute("""
+                INSERT INTO donors
+                (donor_id,name,age,gender,blood_group,district,phone,email,bio)
+                VALUES(?,?,?,?,?,?,?,?,?)
+                """, (
+                    new_id,
+                    data["name"],
+                    int(data["age"]),
+                    data["gender"],
+                    data["blood_group"],
+                    data["district"],
+                    data["phone"],
+                    data["email"],
+                    data["bio"]
+                ))
+
+                conn.commit()
+
+                # ============================
+                # 📧 EMAIL TO ADMIN
+                # ============================
+                admin_email = "hgsuresh62@gmail.com"
+
+                subject_admin = "New Donor Registered 🩸"
+
+                body_admin = f"""
 New Donor Added
 
-Name: {request.form["name"]}
-Age: {request.form["age"]}
-Gender: {request.form["gender"]}
-Blood Group: {request.form["blood_group"]}
-District: {request.form["district"]}
-Phone: {request.form["phone"]}
-Email: {request.form["email"]}
+Name: {data["name"]}
+Age: {data["age"]}
+Gender: {data["gender"]}
+Blood Group: {data["blood_group"]}
+District: {data["district"]}
+Phone: {data["phone"]}
+Email: {data["email"]}
 
 Added By: {session.get("username")} ({session.get("role")})
 
 Blood Bank System
 """
 
-        send_email(subject_admin, body_admin, admin_email)
+                send_email(subject_admin, body_admin, admin_email)
 
-        # 🔥 ADD DELAY
-        time.sleep(2)
+                time.sleep(2)
 
-        # ============================
-        # 📧 EMAIL TO DONOR
-        # ============================
-        donor_email = request.form["email"]
+                # ============================
+                # 📧 EMAIL TO DONOR
+                # ============================
+                subject_user = "Thank You for Donating 🩸"
 
-        subject_user = "Thank You for Donating 🩸"
+                body_user = f"""
+Hello {data["name"]},
 
-        body_user = f"""
-Hello {request.form["name"]},
-
-Thank you for registering as a blood donor ❤️
+You are successfully registered as a blood donor ❤️
 
 Your contribution can save lives.
 
 Blood Bank Team
 """
 
-        send_email(subject_user, body_user, donor_email)
+                send_email(subject_user, body_user, data["email"])
 
-        conn.close()
+                conn.close()
 
-        flash("Donor Added Successfully & Emails Sent ✅")
-        return redirect(url_for("add_donor"))
+                # ============================
+                # 🧹 CLEAR SESSION
+                # ============================
+                session.pop("otp", None)
+                session.pop("form_data", None)
+
+                flash("✅ Donor Verified & Added Successfully")
+                return redirect(url_for("add_donor"))
+
+            else:
+                flash("❌ Invalid OTP")
+
+        except Exception as e:
+            print("ERROR:", e)  # 🔥 VERY IMPORTANT for debugging
+            flash("⚠️ Internal Server Error. Check console.")
+
+    return render_template("verify_otp.html")
+
+
+
+
+
+
+
+
+@app.route("/profile")
+@login_required
+def profile():
+
+    conn = get_db()
+    cursor = conn.cursor()
+
+    username = session.get("username")
+    role = session.get("role")
+
+    # Total donors
+    cursor.execute("SELECT COUNT(*) FROM donors")
+    total_donors = cursor.fetchone()[0]
+
+    # Last donor
+    cursor.execute("SELECT name, blood_group FROM donors ORDER BY donor_id DESC LIMIT 1")
+    last_donor = cursor.fetchone()
+
+    # Most common blood group
+    cursor.execute("""
+        SELECT blood_group, COUNT(*) as count
+        FROM donors
+        GROUP BY blood_group
+        ORDER BY count DESC
+        LIMIT 1
+    """)
+    common_bg = cursor.fetchone()
+
+    # Recent donors (last 5)
+    cursor.execute("""
+        SELECT name, blood_group, district
+        FROM donors
+        ORDER BY donor_id DESC
+        LIMIT 5
+    """)
+    recent_donors = cursor.fetchall()
 
     conn.close()
-    return render_template("add_donor.html")
+
+    return render_template("profile.html",
+        username=username,
+        role=role,
+        total_donors=total_donors,
+        last_donor=last_donor,
+        common_bg=common_bg,
+        recent_donors=recent_donors
+    )
+
+
+
+@app.route("/donor_map")
+@login_required
+def donor_map():
+
+    conn = get_db()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT district, COUNT(*) 
+        FROM donors 
+        GROUP BY district
+    """)
+
+    rows = cursor.fetchall()
+
+    # ✅ Convert to JSON-safe list
+    data = []
+    for r in rows:
+        data.append([str(r[0]), int(r[1])])
+
+    conn.close()
+
+    return render_template("donor_map.html", data=data)
+
+
+
+@app.route("/reports")
+@login_required
+def reports():
+
+    conn = get_db()
+    cursor = conn.cursor()
+
+    # ============================
+    # 🩸 DONOR TABLE
+    # ============================
+    cursor.execute("SELECT name, blood_group, district, phone, age FROM donors")
+    donors = cursor.fetchall()
+
+    # ============================
+    # 📊 BLOOD GROUP COUNT
+    # ============================
+    cursor.execute("SELECT blood_group, COUNT(*) FROM donors GROUP BY blood_group")
+    blood_data = [[str(r[0]), int(r[1])] for r in cursor.fetchall()]
+
+    # ============================
+    # 📍 DISTRICT COUNT
+    # ============================
+    cursor.execute("SELECT district, COUNT(*) FROM donors GROUP BY district")
+    district_data = [[str(r[0]), int(r[1])] for r in cursor.fetchall()]
+
+    # ============================
+    # 🔢 TOTAL DONORS
+    # ============================
+    cursor.execute("SELECT COUNT(*) FROM donors")
+    total_donors = cursor.fetchone()[0]
+
+    # ============================
+    # 🏆 TOP BLOOD GROUP
+    # ============================
+    cursor.execute("""
+        SELECT blood_group, COUNT(*) as c
+        FROM donors
+        GROUP BY blood_group
+        ORDER BY c DESC LIMIT 1
+    """)
+    common_bg = cursor.fetchone()
+
+    # ============================
+    # 🏆 TOP DISTRICT
+    # ============================
+    cursor.execute("""
+        SELECT district, COUNT(*) as c
+        FROM donors
+        GROUP BY district
+        ORDER BY c DESC LIMIT 1
+    """)
+    top_district = cursor.fetchone()
+
+    # ============================
+    # ✅ ELIGIBILITY ANALYSIS
+    # ============================
+    cursor.execute("""
+        SELECT 
+        SUM(CASE WHEN age BETWEEN 18 AND 65 THEN 1 ELSE 0 END),
+        COUNT(*)
+        FROM donors
+    """)
+    eligible, total = cursor.fetchone()
+    not_eligible = total - eligible
+
+    # ============================
+    # ⚠️ RARE BLOOD GROUPS
+    # ============================
+    cursor.execute("""
+        SELECT blood_group, COUNT(*) as c
+        FROM donors
+        GROUP BY blood_group
+        HAVING c < 3
+    """)
+    rare_groups = cursor.fetchall()
+
+    # ============================
+    # 🚨 LOW DISTRICT DONORS
+    # ============================
+    cursor.execute("""
+        SELECT district, COUNT(*) as c
+        FROM donors
+        GROUP BY district
+        HAVING c < 3
+    """)
+    low_districts = cursor.fetchall()
+
+    # ============================
+    # 📊 AGE DISTRIBUTION
+    # ============================
+    cursor.execute("""
+        SELECT 
+        SUM(CASE WHEN age < 25 THEN 1 ELSE 0 END),
+        SUM(CASE WHEN age BETWEEN 25 AND 40 THEN 1 ELSE 0 END),
+        SUM(CASE WHEN age > 40 THEN 1 ELSE 0 END)
+        FROM donors
+    """)
+    age_data = list(cursor.fetchone())
+
+    # ============================
+    # 👤 GENDER DISTRIBUTION
+    # ============================
+    cursor.execute("""
+        SELECT gender, COUNT(*) 
+        FROM donors 
+        GROUP BY gender
+    """)
+    gender_data = [[str(r[0]), int(r[1])] for r in cursor.fetchall()]
+
+    conn.close()
+
+    return render_template("reports.html",
+        donors=donors,
+        blood_data=blood_data,
+        district_data=district_data,
+        total_donors=total_donors,
+        common_bg=common_bg,
+        top_district=top_district,
+        eligible=eligible,
+        not_eligible=not_eligible,
+        rare_groups=rare_groups,
+        low_districts=low_districts,
+        age_data=age_data,
+        gender_data=gender_data
+    )
+
+
+
 # ============================
 # HOSPITALS
 # ============================

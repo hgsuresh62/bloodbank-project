@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 style="text-align:center;">📍 District-wise Donor Map</h2>
+
+<div id="map" style="height:500px;"></div>
+
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+
+// Initialize map (India center)
+var map = L.map('map').setView([20.5937, 78.9629], 5);
+
+// Map tiles
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: 'Map data © OpenStreetMap'
+}).addTo(map);
+
+// 🔥 District coordinates (add more if needed)
+var district_coords = {
+    "Chennai": [13.0827, 80.2707],
+    "Coimbatore": [11.0168, 76.9558],
+    "Madurai": [9.9252, 78.1198],
+    "Trichy": [10.7905, 78.7047],
+    "Salem": [11.6643, 78.1460]
+};
+
+// Data from Flask
+var donor_data = {{ data | tojson }};
+
+// Add markers
+donor_data.forEach(function(d){
+    var district = d[0];
+    var count = d[1];
+
+    if(district_coords[district]){
+        var coords = district_coords[district];
+
+        L.marker(coords)
+        .addTo(map)
+        .bindPopup("📍 " + district + "<br>Donors: " + count);
+    }
+});
+
+</script>
+
+{% endblock %}

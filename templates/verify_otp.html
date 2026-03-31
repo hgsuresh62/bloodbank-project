@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card" style="
+    max-width:500px;
+    margin:auto;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0px 5px 20px rgba(0,0,0,0.1);
+">
+
+<h2 style="text-align:center;">🔐 Verify OTP</h2>
+
+<form method="POST">
+
+<label>Enter OTP</label>
+<input type="text" name="otp" required class="form-control" placeholder="Enter 6-digit OTP">
+
+<br>
+
+<button class="btn btn-primary" style="width:100%;">
+    Verify OTP
+</button>
+
+</form>
+
+</div>
+
+{% endblock %}

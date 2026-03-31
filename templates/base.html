@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>LifeLink - Blood Bank</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -180,12 +180,16 @@ input,select{
 
 <div class="nav-links">
 
+<a href="{{ url_for('profile') }}">Profile</a>
 <a href="{{ url_for('home') }}">Home</a>
 <a href="{{ url_for('dashboard') }}">Dashboard</a>
 <a href="{{ url_for('hospitals') }}">Hospitals</a>
 <a href="{{ url_for('donors') }}">View Donors</a>
 <a href="{{ url_for('findblood') }}">Find Blood</a>
 <a href="{{ url_for('request_blood') }}">Request Blood</a>
+<a href="{{ url_for('donor_map') }}">Donor Map</a>
+<a href="{{ url_for('reports') }}">Reports</a>
+
 
 {% if session.get("role") == "admin" %}
 <a href="{{ url_for('blood_requests') }}">Blood Requests</a>

@@ -52,6 +52,44 @@
 <label>Short Bio</label>
 <textarea name="bio" class="form-control" rows="3"></textarea>
 
+<hr>
+
+<h4>🧪 Eligibility Details</h4>
+
+<label>Weight (kg)</label>
+<input type="number" name="weight" required class="form-control">
+
+<label>Hemoglobin (g/dL)</label>
+<input type="number" step="0.1" name="hemoglobin" required class="form-control">
+
+<!-- ✅ NEW FIELD -->
+<label>Have you donated before?</label>
+<select name="donated_before" id="donated_before" required class="form-control" onchange="toggleDate()">
+    <option value="">Select</option>
+    <option value="no">No</option>
+    <option value="yes">Yes</option>
+</select>
+
+<!-- ✅ UPDATED -->
+<div id="dateDiv" style="display:none;">
+    <label>Last Blood Donation Date</label>
+    <input type="date" name="last_donation" class="form-control">
+</div>
+
+<label>Any Disease?</label>
+<select name="disease" required class="form-control">
+    <option value="">Select</option>
+    <option value="no">No</option>
+    <option value="yes">Yes</option>
+</select>
+
+<label>Currently Sick?</label>
+<select name="sick" required class="form-control">
+    <option value="">Select</option>
+    <option value="no">No</option>
+    <option value="yes">Yes</option>
+</select>
+
 <br>
 
 <button class="btn btn-success" type="submit" style="width:100%;">
@@ -61,5 +99,18 @@
 </form>
 
 </div>
+
+<script>
+function toggleDate() {
+    var val = document.getElementById("donated_before").value;
+    var div = document.getElementById("dateDiv");
+
+    if (val === "yes") {
+        div.style.display = "block";
+    } else {
+        div.style.display = "none";
+    }
+}
+</script>
 
 {% endblock %}
